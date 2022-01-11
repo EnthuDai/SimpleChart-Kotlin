@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Chart" >
+        <attr name="title" format="string" />
+        <attr name="animation" format="boolean" />
+        <attr name="animationDuration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="RectangularCoordinateSystem">
+        <attr name="xAxis" format="string" />
+        <attr name="yAxis" format="string"/>
+        <attr name="yAxisDesc" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="PieChart" >
+        <attr name="nameProperty" format="string" />
+        <attr name="valueProperty" format="string" />
+    </declare-styleable>
+</resources>
