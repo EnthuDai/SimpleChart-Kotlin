@@ -4,6 +4,7 @@
         <attr name="title" format="string" />
         <attr name="animation" format="boolean" />
         <attr name="animationDuration" format="integer" />
+        <attr name="showLegend" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="RectangularCoordinateSystem">
@@ -13,7 +14,8 @@
     </declare-styleable>
 
     <declare-styleable name="PieChart" >
-        <attr name="nameProperty" format="string" />
-        <attr name="valueProperty" format="string" />
+        <attr name="name" format="string" />
+        <attr name="value" format="string" />
+        <attr name="desc" format="string" />
     </declare-styleable>
 </resources>
