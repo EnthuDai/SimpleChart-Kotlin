@@ -16,6 +16,5 @@
     <declare-styleable name="PieChart" >
         <attr name="name" format="string" />
         <attr name="value" format="string" />
-        <attr name="desc" format="string" />
     </declare-styleable>
 </resources>
