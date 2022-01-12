@@ -2,11 +2,12 @@ package com.poemdistance.simplechart_kotlin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.poemdistance.simplechart_kotlin.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
+    val LOG_TAG = "Chart"
     lateinit var binding: ActivityMainBinding
 
     val jsonData = listOf("""
@@ -21,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.barChart.updateData(jsonData[dataIndex % 2])
-        binding.lineChart.updateData(jsonData[dataIndex % 2])
-        binding.pieChart.updateData(jsonData[dataIndex % 2])
+//        binding.barChart.updateData(jsonData[dataIndex % 2])
+//        binding.lineChart.updateData(jsonData[dataIndex % 2])
+//        binding.pieChart.updateData(jsonData[dataIndex % 2])
 
         binding.button.setOnClickListener {
             dataIndex++
@@ -31,10 +32,12 @@ class MainActivity : AppCompatActivity() {
             binding.lineChart.updateData(jsonData[dataIndex % 2])
             binding.pieChart.updateData(jsonData[dataIndex % 2])
         }
+
+        // 监听触摸事件，将获得Json字符串形式的当前触控数据，当触控点从图表移开时返回null
         binding.lineChart.listener =  {
-            Toast.makeText(this,it?:"",Toast.LENGTH_SHORT).show()
+            it?.let{
+                Log.d(LOG_TAG, it)
+            }
         }
-
-
     }
 }
