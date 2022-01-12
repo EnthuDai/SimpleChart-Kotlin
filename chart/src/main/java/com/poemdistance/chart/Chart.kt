@@ -60,6 +60,7 @@ open class Chart(context: Context, attrs: AttributeSet) : View(context, attrs) {
         title = obtainStyledAttributes.getString(R.styleable.Chart_title)
         animation = obtainStyledAttributes.getBoolean(R.styleable.Chart_animation,true)
         animationDuration = obtainStyledAttributes.getInteger(R.styleable.Chart_animationDuration,500).toLong()
+        showLegend = obtainStyledAttributes.getBoolean(R.styleable.Chart_showLegend, true)
         obtainStyledAttributes.recycle()
     }
 
