@@ -37,6 +37,7 @@ class PieChart(context: Context, attrs: AttributeSet) :
     var touchedOrigin = Point(0f, 0f) // 在触摸动画中，坐标系原点的位置
     var nameProperty: String
     var valueProperty: String
+    var descProperty:String
     var radius: Float = 100f
     var touchedOffset = 20f // 触摸区域扇形原点与极坐标系圆点的偏移量
     var touchedAngle = 0f // 取值范围0°-360°
@@ -49,9 +50,10 @@ class PieChart(context: Context, attrs: AttributeSet) :
 
     init {
         val obtainStyledAttributes = context.obtainStyledAttributes(attrs, R.styleable.PieChart)
-        nameProperty = obtainStyledAttributes.getString(R.styleable.PieChart_nameProperty) ?: "name"
+        nameProperty = obtainStyledAttributes.getString(R.styleable.PieChart_name) ?: "name"
         valueProperty =
-            obtainStyledAttributes.getString(R.styleable.PieChart_valueProperty) ?: "value"
+            obtainStyledAttributes.getString(R.styleable.PieChart_value) ?: "value"
+        descProperty = obtainStyledAttributes.getString(R.styleable.PieChart_desc) ?: "name"
         obtainStyledAttributes.recycle()
     }
 
@@ -142,20 +144,15 @@ class PieChart(context: Context, attrs: AttributeSet) :
             totalValue += it[valueProperty].asFloat
         }
         val text =
-            "${"%.1f".format(data[focusedDataIndex][valueProperty].asFloat / totalValue * 100)}%  ${data[focusedDataIndex][nameProperty].asString}:${data[focusedDataIndex][valueProperty].asString} "
+            " ${data[focusedDataIndex][descProperty].asString}:${data[focusedDataIndex][valueProperty].asString}  ${"%.1f".format(data[focusedDataIndex][valueProperty].asFloat / totalValue * 100)}% "
         //绘制说明区域阴影框
         titlePaint.color = Color.GRAY
-        canvas.drawRect(
-            width - titlePaint.measureText(text) - titlePaint.fontMetrics.descent,
-            0f,
-            width + titlePaint.fontMetrics.descent,
-            0 + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top,
-            shadowPaint
-        )
         titlePaint.textAlign = Paint.Align.RIGHT
         canvas.saveLayerAlpha(0f, 0f, width.toFloat(), height.toFloat(), 255)
-        titlePaint.color = Color.WHITE
-        canvas.drawText(text, width.toFloat(), 0 - titlePaint.fontMetrics.ascent, titlePaint)
+        titlePaint.color = Color.BLACK
+        titlePaint.textAlign = Paint.Align.CENTER
+
+        canvas.drawText(text, origin.x,origin.y + radius + 10 +titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top, titlePaint)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
