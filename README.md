@@ -39,7 +39,7 @@
 	```
  PS: 发布一个kotlin的android library到jitpack的过程极为艰难，尤其是在使用较新版本的gradle时，大家如果遇到问题，可以参考一下这篇文章 
 
-> [kotlin android library 发布至jitpack问题及解决方式记载](https://mp.csdn.net/mp_blog/creation/editor/122472628)
+> [kotlin android library 发布至jitpack问题及解决方式记载](https://blog.csdn.net/qq_28504151/article/details/122472628)
 
 ## 源码导入
 1. 下载该项目源码
