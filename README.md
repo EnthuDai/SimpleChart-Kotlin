@@ -34,7 +34,7 @@
 
 	```bash
 	dependencies {
-	    implementation 'com.github.EnthuDai:SimpleChart-Kotlin:1.0.7'
+	    implementation 'com.github.EnthuDai:SimpleChart-Kotlin:1.0.8'
 	}	
 	```
  PS: 发布一个kotlin的android library到jitpack的过程极为艰难，尤其是在使用较新版本的gradle时，大家如果遇到问题，可以参考一下这篇文章 
@@ -115,21 +115,21 @@ barChart.listener =  {
 |showLegend|Boolean|自动（单维度数据时不显示）|是否显示图例
 
 
-## 柱状图
+## 柱状图 com.poemdistance.chart.BarChart
 |    属性名    |类型                              |默认值           			  |含义                           |是否必填
 |----------------|-------------------------------|-----------------------------|-----------------------------|-----------------------------|
 |xAxis|String|                                   |x轴数据的参数名|是
 |yAxis|String| |y轴数据的参数名|是
 |yAxisDesc|String|yAxis值|描述y轴数据项的参数名|否
 
-## 折线图
+## 折线图 com.poemdistance.chart.LineChart
 |    属性名    |类型                              |默认值           			  |含义                           |是否必填
 |----------------|-------------------------------|-----------------------------|-----------------------------|-----------------------------|
 |xAxis|String|                                   |x轴数据的参数名|是
 |yAxis|String| |y轴数据的参数名，支持多个，用“，”分隔|是
 |yAxisDesc|String|yAxis值|描述y轴数据项的参数名，支持多个，用“，”分隔|否
 
-## 饼图
+## 饼图 com.poemdistance.chart.PieChart
 |    属性名    |类型                              |默认值           			  |含义                           |是否必填
 |----------------|-------------------------------|-----------------------------|-----------------------------|-----------------------------|
 |name|String|                                   |数据项的展示参数名|是
