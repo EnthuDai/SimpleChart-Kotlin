@@ -6,9 +6,41 @@
 
 # 引入方式
 ## gradle导入
-该种方法不推荐，因为我还没能成功发布到jitpack平台，gradle7 + Android library + Kotlin的发布真的是比写代码还难，我太难了.jpg
-等这几天研究成功后更新该方法
-暂时请使用源码导入
+1. 在更目录中的build.gradle添加 JitPack仓库
+
+	```powershell
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+	```
+	以上是官方提供的添加仓库方法，实测在较新的gradle版本中此方式无法成功生效，而是需要在settings.gradle中添加：
+	
+
+	```bash
+	dependencyResolutionManagement {
+    	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    	repositories {
+        	...
+        	maven { url 'https://jitpack.io' }
+   	 }
+	}
+	```
+
+2. 添加依赖
+ 
+
+	```bash
+	dependencies {
+	    implementation 'com.github.EnthuDai:SimpleChart-Kotlin:1.0.7'
+	}	
+	```
+ PS: 发布一个kotlin的android library到jitpack的过程极为艰难，尤其是在使用较新版本的gradle时，大家如果遇到问题，可以参考一下这篇文章 
+
+> [kotlin android library 发布至jitpack问题及解决方式记载](https://blog.csdn.net/qq_28504151/article/details/122472628)
+
 ## 源码导入
 1. 下载该项目源码
 
