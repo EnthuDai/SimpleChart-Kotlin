@@ -143,13 +143,7 @@ class PieChart(context: Context, attrs: AttributeSet) :
         }
         val text =
             " ${data[focusedDataIndex][nameProperty].asString}:${data[focusedDataIndex][valueProperty].asString}  ${"%.1f".format(data[focusedDataIndex][valueProperty].asFloat / totalValue * 100)}% "
-        //绘制说明区域阴影框
-        titlePaint.color = Color.GRAY
-        titlePaint.textAlign = Paint.Align.RIGHT
-        canvas.saveLayerAlpha(0f, 0f, width.toFloat(), height.toFloat(), 255)
-        titlePaint.color = Color.BLACK
         titlePaint.textAlign = Paint.Align.CENTER
-
         canvas.drawText(text, origin.x,origin.y + radius + 10 +titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top, titlePaint)
     }
 
@@ -251,7 +245,7 @@ class PieChart(context: Context, attrs: AttributeSet) :
                 15f, 15f,
                 legendPaint
             )
-            legendPaint.color = Color.BLACK
+            legendPaint.color = if(isDarkTheme(context)) Color.WHITE else Color.BLACK
             canvas.drawText(
                 obj[nameProperty].asString,
                 nextItemLeft + legendItemWidth + 10f,
