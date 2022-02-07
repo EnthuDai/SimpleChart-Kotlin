@@ -1,6 +1,7 @@
 package com.poemdistance.chart
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -32,7 +33,6 @@ open class Chart(context: Context, attrs: AttributeSet) : View(context, attrs) {
         isAntiAlias = true
     }
     val titlePaint = Paint().apply {
-        this.color = Color.BLACK
         isAntiAlias = true
         this.textSize = 50f
         this.strokeWidth =  8f
@@ -62,6 +62,11 @@ open class Chart(context: Context, attrs: AttributeSet) : View(context, attrs) {
         animationDuration = obtainStyledAttributes.getInteger(R.styleable.Chart_animationDuration,500).toLong()
         showLegend = obtainStyledAttributes.getBoolean(R.styleable.Chart_showLegend, true)
         obtainStyledAttributes.recycle()
+        if(isDarkTheme(getContext())){
+            titlePaint.color = Color.WHITE
+        }else{
+            titlePaint.color = Color.BLACK
+        }
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -69,7 +74,6 @@ open class Chart(context: Context, attrs: AttributeSet) : View(context, attrs) {
             Log.d(LOG_TAG, titlePaint.fontMetrics.toJsonString())
             if(title!=null){
                 titlePaint.textAlign = Paint.Align.LEFT
-                titlePaint.color = Color.BLACK
                 canvas.drawText(title?:"",10f, 10f + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.ascent, titlePaint)
             }
         }
@@ -137,4 +141,9 @@ open class Chart(context: Context, attrs: AttributeSet) : View(context, attrs) {
         this.parent?.requestDisallowInterceptTouchEvent(true)
     }
 
+    fun isDarkTheme(context: Context): Boolean {
+        val flag = context.resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        return flag == Configuration.UI_MODE_NIGHT_YES
+    }
 }

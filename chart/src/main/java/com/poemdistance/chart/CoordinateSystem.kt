@@ -25,6 +25,18 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
     val linePaint = Paint().apply {
         this.color = Color.BLACK
     }
+    val baseTextPaint = Paint().apply {  // 正常情况下的文字画笔
+        isAntiAlias = true
+        this.textSize = 50f
+        this.strokeWidth =  8f
+    }
+    val secondaryTextPaint = Paint().apply { // 次要文字画笔，用于触摸图标时非触摸区域文字显示
+        this.isAntiAlias = true
+        this.textSize = 50f
+        this.strokeWidth =  8f
+//        alpha = 15  实测无法在这里设置画笔的透明度，需在init中设置
+
+    }
     var xAxis: String // x轴字段名称
     var yAxis: List<String>
     var yAxisDesc: List<String> // y轴字段中文描述
@@ -48,7 +60,16 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
         }
         showLegend = yAxis.size > 1
         obtainStyledAttributes.recycle()
-
+        if(isDarkTheme(getContext())){
+            baseTextPaint.color = Color.WHITE
+            secondaryTextPaint.color = Color.WHITE
+            linePaint.color = Color.WHITE
+        }else{
+            baseTextPaint.color = Color.BLACK
+            secondaryTextPaint.color = Color.BLACK
+            linePaint.color = Color.BLACK
+        }
+        secondaryTextPaint.alpha = 15
     }
 
     override fun onDraw(canvas: Canvas?) {
@@ -66,15 +87,13 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
             } else {
                 (xEndPoint.x - origin.x) / data.size
             }
-
-            // 绘制x轴
-            canvas.drawLine(origin.x, origin.y, xEndPoint.x, xEndPoint.y, linePaint)
-            // 绘制y轴
-            canvas.drawLine(origin.x, origin.y, yEndPoint.x, yEndPoint.y, linePaint)
-
             drawXTick(canvas) // 绘制刻度
             drawYTick(canvas)
             drawSeries(canvas)
+            // 绘制x轴，后绘制x轴和y轴可以避免柱状图中柱子覆盖到坐标轴
+            canvas.drawLine(origin.x, origin.y, xEndPoint.x, xEndPoint.y, linePaint)
+            // 绘制y轴
+            canvas.drawLine(origin.x, origin.y, yEndPoint.x, yEndPoint.y, linePaint)
             if (showLegend) drawLegend(canvas)
             if (focusedDataIndex != -1) {
                 drawFocusedInfo(canvas)
@@ -158,39 +177,23 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
      */
     open fun drawFocusedInfoText(canvas: Canvas, focusedDataIndex: Int) {
         return
-        val text =
-            "${data[focusedDataIndex][xAxis].asString}:${data[focusedDataIndex][yAxis[0]].asString}"
-        //绘制说明区域阴影框
-        titlePaint.color = Color.GRAY
-        canvas.drawRect(
-            xEndPoint.x - titlePaint.measureText(text) - titlePaint.fontMetrics.descent,
-            yEndPoint.y,
-            xEndPoint.x + titlePaint.fontMetrics.descent,
-            yEndPoint.y + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top,
-            linePaint
-        )
-        titlePaint.textAlign = Paint.Align.RIGHT
-        canvas.saveLayerAlpha(0f, 0f, width.toFloat(), height.toFloat(), 255)
-        titlePaint.color = Color.WHITE
-        canvas.drawText(text, xEndPoint.x, yEndPoint.y - titlePaint.fontMetrics.ascent, titlePaint)
     }
 
     /**
      * 绘制x轴刻度及值
      */
     private fun drawXTick(canvas: Canvas) {
-        titlePaint.color = Color.BLACK
-        titlePaint.textAlign = Paint.Align.CENTER
-        if (focusedDataIndex != -1) { // 在触摸时只绘制触摸点的信息
+        baseTextPaint.textAlign = Paint.Align.CENTER
+        secondaryTextPaint.textAlign = Paint.Align.CENTER
+        if (focusedDataIndex != -1) {
             val x = xWidthUnit * focusedDataIndex + xWidthUnit / 2 + origin.x
             canvas.drawLine(x, origin.y, x, origin.y + 10, linePaint)
             canvas.drawText(
                 data[focusedDataIndex][xAxis].asString,
                 x,
                 origin.y + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top,
-                titlePaint
+                baseTextPaint
             )
-            titlePaint.alpha = 15
         }
         var prevTextEnd = origin.x
         for (index in data.indices) {
@@ -202,13 +205,10 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
                     data[index][xAxis].asString,
                     x,
                     origin.y + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top,
-                    titlePaint
+                    if (focusedDataIndex == -1 ) baseTextPaint else secondaryTextPaint
                 )
                 prevTextEnd = x + textWidth / 2
             }
-        }
-        if (focusedDataIndex != -1) {
-            titlePaint.alpha = 255
         }
     }
 
@@ -216,8 +216,8 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
      * 绘制y轴刻度及值
      */
     private fun drawYTick(canvas: Canvas) {
-        titlePaint.color = Color.BLACK
-        titlePaint.textAlign = Paint.Align.RIGHT
+        baseTextPaint.textAlign = Paint.Align.RIGHT
+        secondaryTextPaint.textAlign = Paint.Align.RIGHT
         var y = 0f
         if (focusedDataIndex != -1) {
             yAxis.map {
@@ -228,10 +228,9 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
                     formatFloatStr(data[focusedDataIndex][it].asFloat),
                     origin.x - 15,
                     y + (titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top) / 2 - titlePaint.fontMetrics.bottom,
-                    titlePaint
+                    baseTextPaint
                 )
             }
-            titlePaint.alpha = 15
         }
         for (index in 0..yIntervalCounts) {
             y = origin.y + (yEndPoint.y - origin.y) / yIntervalCounts * index
@@ -240,11 +239,8 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
                 formatFloatStr((yMaxValue - yMinValue) / yIntervalCounts * index),
                 origin.x - 15,
                 y + (titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top) / 2 - titlePaint.fontMetrics.bottom,
-                titlePaint
+                if (focusedDataIndex == -1 ) baseTextPaint else secondaryTextPaint
             )
-        }
-        if (focusedDataIndex != -1) {
-            titlePaint.alpha = 255
         }
     }
 
@@ -296,15 +292,6 @@ abstract class RectangularCoordinateSystem(context: Context, attrs: AttributeSet
         }
         yMaxValue = resultPair.first * resultPair.second
         yIntervalCounts = resultPair.first
-    }
-
-    /**
-     * 如果x轴字段是数字类型，把数据x轴字段从小到大排序
-     */
-    private fun sortData(list: List<JsonObject>): List<JsonObject> {
-        return list.sortedBy {
-            it[xAxis].asString
-        }
     }
 
     /**

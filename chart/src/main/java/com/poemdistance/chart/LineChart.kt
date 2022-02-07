@@ -37,8 +37,6 @@ class LineChart(context: Context, attrs: AttributeSet) : RectangularCoordinateSy
         }else{
             drawLines(canvas)
         }
-
-
     }
 
     private fun drawLines(canvas: Canvas){
@@ -130,24 +128,7 @@ class LineChart(context: Context, attrs: AttributeSet) : RectangularCoordinateSy
      */
     override fun drawFocusedInfoText(canvas: Canvas, focusedDataIndex: Int) {
         return
-        val text = StringBuilder(data[focusedDataIndex][xAxis].asString)
-        yAxis.mapIndexed { index, s ->
-            text.append("\r\n${yAxisDesc[index]}:${data[focusedDataIndex][s].asString}")
-        }
-        //绘制说明区域阴影框
-        titlePaint.color = Color.GRAY
-        canvas.drawRect(
-            xEndPoint.x - titlePaint.measureText(text.toString()) - titlePaint.fontMetrics.descent,
-            yEndPoint.y,
-            xEndPoint.x + titlePaint.fontMetrics.descent,
-            yEndPoint.y + titlePaint.fontMetrics.bottom - titlePaint.fontMetrics.top,
-            linePaint
-        )
-        titlePaint.textAlign = Paint.Align.RIGHT
-        canvas.saveLayerAlpha(0f, 0f, width.toFloat(), height.toFloat(), 255)
-        titlePaint.color = Color.WHITE
-        canvas.drawText(text.toString(), xEndPoint.x, yEndPoint.y - titlePaint.fontMetrics.ascent, titlePaint)
-    }
+            }
 
     override fun drawLegendItem(
         canvas: Canvas,
